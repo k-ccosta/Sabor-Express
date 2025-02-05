@@ -1,126 +1,113 @@
 import os
+import string
 
-restaurantes = [
-    {"nome":"Dogão do Kelvin", "categoria":"lanchonete", "status":False}
+# variáveis globais
+menu_opcoes = ["Cadastrar Restaurante", "Listar Restaurantes", "Alterar Status do Restaurante", "Sair"]
+
+restaurantes_cadastrados = [
+    {"nome_restaurante":"Duka Doces", "categoria":"Doceria", "status":True}
 ]
-
-# funções:
 
 def limpar_tela():
     os.system("cls" if os.name == "nt" else "clear")
-
 def retornar_menu_principal():
-
     opcoes = ["Retornar ao Menu Principal", "Encerrar Aplicação"]
 
-    print("\nO que deseja fazer?\n")
+    print("\nO que deseja fazer? \n")
 
     for indice, opcao in enumerate(opcoes):
         print(f"[{indice}] - {opcao}")
-    
-    resposta = int(input("\n> "))
+
+    while True:
+        try:
+            resposta = int(input("\n> "))
+
+            if resposta in range(len(opcoes)):
+                break
+            else:
+                print("\nOPÇÃO INVÁLIDA! Por favor, digite 0 ou 1")                 
+        except ValueError:
+            print("\nOPÇÃO INVÁLIDA! Por favor, digite um n° inteiro")    
 
     if resposta == 0:
+        limpar_tela()
         main()
     else:
+        limpar_tela()
         encerrar_aplicacao()
-
-def exibir_nome_programa():
-    print("""
-        𝕊𝕒𝕓𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤
-        """)
-def exibir_menu():
-    menu_opcoes = ["Cadastrar Resturante", "Listar Restaurantes", "Alterar Status Restaurante", "Sair"]
-
-    for indice, opcao in enumerate(menu_opcoes):
-        print(f"[{indice}] - {opcao}")
-def encerrar_aplicacao():
-    limpar_tela()
-    print("Encerrando Aplicação")
 
 def cadastrar_restaurante():
     limpar_tela()
-
     print("""
           ℂ𝕒𝕕𝕒𝕤𝕥𝕣𝕠 𝕕𝕖 ℝ𝕖𝕤𝕥𝕒𝕦𝕣𝕒𝕟𝕥𝕖
           """)
-
+    
     restaurante = {
-        "nome" : input("Digite o nome do restaurante: "),
-        "categoria" : input("Informe a categoria do restaurante: "),
+        "nome_restaurante":string.capwords(input("Digite o nome do restaurante: ")),
+        "categoria":string.capwords(input("Digite a categoria do restaurante: ")),
         "status":False
     }
 
-    restaurantes.append(restaurante)
+    restaurantes_cadastrados.append(restaurante)
 
     retornar_menu_principal()
-
 def listar_restaurantes():
     limpar_tela()
 
-    print("""
-          𝕃𝕚𝕤𝕥𝕒 𝕕𝕖 ℝ𝕖𝕤𝕥𝕒𝕦𝕣𝕒𝕟𝕥𝕖𝕤
-          """)
+    print(f"{"Nome Restaurante".ljust(25)} | {"Categoria".ljust(25)} | {"Status"}")
 
-    for restaurante in restaurantes:
-        print(f"{'Nome do Restaurante'.ljust(20)} | {'Categoria'.ljust(20)} | {'Status'}")
-        print(f"{restaurante["nome"].ljust(20)} | {restaurante["categoria"].ljust(20)} | {'Ativo' if restaurante["status"] else 'Desativado'}")
+    for restaurante in restaurantes_cadastrados:
+        print(f"{restaurante["nome_restaurante"].ljust(25)} | {restaurante["categoria"].ljust(25)} | {'Ativo' if restaurante["status"] else 'Desativado'}")
 
-    retornar_menu_principal()
-
+    retornar_menu_principal() 
 def alterar_status_restaurante():
+    limpar_tela()
 
-    # limpar_tela()
+    nome_restaurante_digitado = input("\nDigite o nome do restaurante: ")
 
-    # listar_restaurantes()
-
-    # indice = int(input("\nInforme o indice do restaurante que deseja alterar o status: "))
-
-    nome_restaurante = input("Digite o nome do restaurante que deseja alterar o status: ")
-
-    restaurante_encontrado = False
-
-    for restaurante in restaurantes:
-        if nome_restaurante == restaurante["nome"]:
-            restaurante_encontrado = True
-
+    for restaurante in restaurantes_cadastrados:
+        if nome_restaurante_digitado == restaurante["nome_restaurante"]:
             restaurante["status"] = not restaurante["status"]
 
-            print(f"O restaurante foi {'ativado' if restaurante["status"] == True else 'desativado'} com sucesso.")
-        
-        if not restaurante_encontrado:
-            print("Restaurante não encontrado")
+            print(f"\nO restaurante foi {'ativado' if restaurante["status"] == True else 'desativado'} com sucesso.")
 
-    retornar_menu_principal()    
+    retornar_menu_principal()
+def encerrar_aplicacao():
+    limpar_tela()
+    print("Aplicação Encerrada!")
 
-def escolhendo_opcao():
+def exibir_titulo():
+    print("""
+          𝕊𝕒𝕓𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤
+          """)
+def exibir_menu():
+    for indice, opcao in enumerate(menu_opcoes):
+        print(f"[{indice}] - {opcao}")
+def escolher_menu():
     while True:
         try:
-            indice_escolhido = int(input("\nO que deseja fazer? "))
+            opcao_escolhida = int(input("\nO que você quer fazer? "))
 
-            if indice_escolhido in range(4):
+            if opcao_escolhida in range(len(menu_opcoes)):
                 break
             else:
-                print(f"\nOPÇÃO INVÁLIDA! Por favor, escolha uma opção entre 0 e 3\n")                
+                print(f"\nOPÇÃO INVÁLIDA! Por favor, selecione uma opção entre 0 e {len(menu_opcoes)-1}")                
         except ValueError:
-            print("\nOPÇÃO INVÁLIDA! Por favor, digite um número inteiro")
-        
-    if indice_escolhido == 0:
+            print("\nOPÇÃO INVÁLIDA! Por favor, informe um n° inteiro")
+    
+    if opcao_escolhida == 0:
         cadastrar_restaurante()
-    elif indice_escolhido == 1:
-        # limpar_tela()
+    elif opcao_escolhida == 1:
         listar_restaurantes()
-        # retornar_menu_principal()
-    elif indice_escolhido == 2:
+    elif opcao_escolhida == 2:
         alterar_status_restaurante()
     else:
         encerrar_aplicacao()
 
 def main():
-    limpar_tela()
-    exibir_nome_programa()
+    exibir_titulo()
     exibir_menu()
-    escolhendo_opcao()
+    escolher_menu()
 
 if __name__ == "__main__":
     main()
